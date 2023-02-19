@@ -21,13 +21,12 @@ public class JpaMasterCourseApplication {
 //            studentRepository.save(student);
                 Student bethy = new Student("Bethy", "Teferi", "be12twhy@gmail", 27);
                 studentRepository.saveAll(List.of(student, bethy));
-                System.out.println("How many student do we have on our database?"+"\n");
-                System.out.println("No of Student"+studentRepository.count());
-                studentRepository.findById(2L).ifPresentOrElse(student1 -> {
-                    System.out.println(student1);
-                },() -> {
-                    System.out.println("Student Not found");
-                });
+                //Custom query in which we can search a student using email
+             studentRepository.findStudentByEmail("be12twhy@gmail")
+                     .ifPresentOrElse(System.out::println,
+                             () -> System.out.println("The student with be12twhy@gmail email is not found"));
+
+
             } catch (Exception e) {
                 System.out.println("Exception is:" + e.getMessage());
             }
