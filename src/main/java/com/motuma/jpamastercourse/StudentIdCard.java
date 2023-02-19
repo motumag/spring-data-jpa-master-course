@@ -10,12 +10,12 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
         })
 public class StudentIdCard {
     @Id
-    @SequenceGenerator(name = "student_sequence",
-            sequenceName = "student_sequence",
+    @SequenceGenerator(name = "student_id_card_sequence",
+            sequenceName = "student_id_card_sequence",
             allocationSize = 1)
     @GeneratedValue(
             strategy = SEQUENCE,
-            generator = "student_sequence"
+            generator = "student_id_card_sequence"
     )
     @Column(
             name = "id",
@@ -24,9 +24,9 @@ public class StudentIdCard {
     private Long id;
     @Column(
             name = "card_number",
-            columnDefinition = "TEXT",
-            nullable = true,
-            length = 15
+            nullable = false,
+            length = 15,
+            unique = true
     )
     private String card_number;
     @OneToOne(cascade = CascadeType.ALL)
@@ -36,17 +36,12 @@ public class StudentIdCard {
     )
     private Student student;
 
+    public StudentIdCard(String card_number, Student student) {
+        this.card_number = card_number;
+        this.student = student;
+    }
 
     public StudentIdCard() {
-    }
-
-    public StudentIdCard(String card_number) {
-        this.card_number = card_number;
-    }
-
-    public StudentIdCard(Long id, String card_number) {
-        this.id = id;
-        this.card_number = card_number;
     }
 
     public Long getId() {
@@ -63,5 +58,13 @@ public class StudentIdCard {
 
     public void setCard_number(String card_number) {
         this.card_number = card_number;
+    }
+
+    public Student getStudent() {
+        return student;
+    }
+
+    public void setStudent(Student student) {
+        this.student = student;
     }
 }

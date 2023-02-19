@@ -17,32 +17,30 @@ public class JpaMasterCourseApplication {
     public static void main(String[] args) {
         SpringApplication.run(JpaMasterCourseApplication.class, args);
     }
+
     @Bean
- CommandLineRunner commandLineRunner(StudentRepository studentRepository){
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository
+            , StudentIdCardRepository studentIdCardRepository) {
         return args -> {
-            generatedData(studentRepository);
-            PageRequest pageRequest=PageRequest.of(
-                    0,5, Sort.Direction.ASC,"firstName");
-            Page<Student> page=studentRepository.findAll(pageRequest);
-            System.out.println(page);
-            };
+            Faker faker = new Faker();
+                String firstName = faker.name().firstName();
+                String lastName = faker.name().lastName();
+                String email = String.format("%s.%s@motumagishu.com", firstName, lastName);
+                Student student = new Student(firstName, lastName, email, faker.number().numberBetween(20, 55));
+                StudentIdCard studentIdCard = new StudentIdCard("1234567890", student);
+                studentIdCardRepository.save(studentIdCard);
+        };
 
- }
- private void sorting(StudentRepository studentRepository){
-     Sort sort=Sort.by(Sort.Direction.ASC,"firstName");
-     studentRepository.findAll(sort)
-             .forEach(student -> System.out.println(student.getFirstName()));
+    }
 
- }
- private void generatedData(StudentRepository studentRepository){
-     Faker faker=new Faker();
-     for (int i=0; i<20;i++){
-         String firstName=faker.name().firstName();
-         String lastName=faker.name().lastName();
-         String email=String.format("%s.%s@motumagishu.com",firstName,lastName);
-         Student student=new Student(firstName,lastName,email,faker.number().numberBetween(20,55));
-         studentRepository.save(student);
-     }
- }
-
+    private void generatedData(StudentRepository studentRepository) {
+        Faker faker = new Faker();
+        for (int i = 0; i < 20; i++) {
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@motumagishu.com", firstName, lastName);
+            Student student = new Student(firstName, lastName, email, faker.number().numberBetween(20, 55));
+            studentRepository.save(student);
+        }
+    }
 }
