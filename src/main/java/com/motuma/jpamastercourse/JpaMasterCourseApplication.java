@@ -29,6 +29,7 @@ public class JpaMasterCourseApplication {
                 Student student = new Student(firstName, lastName, email, faker.number().numberBetween(20, 55));
                 StudentIdCard studentIdCard = new StudentIdCard("1234567890", student);
                 studentIdCardRepository.save(studentIdCard);
+                studentIdCardRepository.findById(1L).ifPresent(System.out::println);
         };
 
     }

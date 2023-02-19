@@ -67,4 +67,13 @@ public class StudentIdCard {
     public void setStudent(Student student) {
         this.student = student;
     }
+
+    @Override
+    public String toString() {
+        return "StudentIdCard{" +
+                "id=" + id +
+                ", card_number='" + card_number + '\'' +
+                ", student=" + student +
+                '}';
+    }
 }

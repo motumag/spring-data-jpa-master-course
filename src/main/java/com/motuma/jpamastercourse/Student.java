@@ -2,6 +2,9 @@ package com.motuma.jpamastercourse;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity(name = "Student")
@@ -46,6 +49,16 @@ public class Student {
             name = "age"
     )
     private Integer age;
+    @OneToOne(mappedBy = "student",//this name must be from StudentIdCard class reln of Student object
+            orphanRemoval = true//this means we can delete the student when we delete his card_number
+    )
+    private StudentIdCard studentIdCard;
+//Bidirectional
+    @OneToMany(
+            mappedBy = "student",//this name must be from Book class reln of Student object
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<Book> books = new ArrayList<>();
 
     public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
