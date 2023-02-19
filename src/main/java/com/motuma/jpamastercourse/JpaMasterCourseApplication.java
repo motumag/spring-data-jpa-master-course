@@ -1,9 +1,13 @@
 package com.motuma.jpamastercourse;
 
+import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -16,26 +20,29 @@ public class JpaMasterCourseApplication {
     @Bean
  CommandLineRunner commandLineRunner(StudentRepository studentRepository){
         return args -> {
-            try {
-                Student motuma = new Student("Motuma", "Gishu", "mow2tuma12@gmail", 27);
-//            studentRepository.save(student);
-                Student bethy = new Student("Bethy", "Teferi", "be12twhy@gmail", 23);
-                Student momo = new Student("Momo", "Nana", "momo@gmail", 22);
-                studentRepository.saveAll(List.of(motuma, bethy,momo));
-                //Custom query in which we can search a student using email
-             studentRepository.findStudentByEmail("be12twhy@gmail")
-                     .ifPresentOrElse(System.out::println,
-                             () -> System.out.println("The student with be12twhy@gmail email is not found"));
-             //How to use list and find from db using custom jpa query
-                studentRepository.findStudentByFirstNameEqualsAndAgeEquals(
-                        "Motuma", 27).forEach(System.out::println);
+            generatedData(studentRepository);
+            PageRequest pageRequest=PageRequest.of(
+                    0,5, Sort.Direction.ASC,"firstName");
+            Page<Student> page=studentRepository.findAll(pageRequest);
+            System.out.println(page);
+            };
 
+ }
+ private void sorting(StudentRepository studentRepository){
+     Sort sort=Sort.by(Sort.Direction.ASC,"firstName");
+     studentRepository.findAll(sort)
+             .forEach(student -> System.out.println(student.getFirstName()));
 
-            } catch (Exception e) {
-                System.out.println("Exception is:" + e.getMessage());
-            }
-            ;
-        };
+ }
+ private void generatedData(StudentRepository studentRepository){
+     Faker faker=new Faker();
+     for (int i=0; i<20;i++){
+         String firstName=faker.name().firstName();
+         String lastName=faker.name().lastName();
+         String email=String.format("%s.%s@motumagishu.com",firstName,lastName);
+         Student student=new Student(firstName,lastName,email,faker.number().numberBetween(20,55));
+         studentRepository.save(student);
+     }
  }
 
 }
