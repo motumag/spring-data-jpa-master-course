@@ -5,6 +5,10 @@ import jakarta.persistence.*;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Entity(name = "Student")
+@Table(name = "student",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "student_email", columnNames = "email")
+        })
 public class Student {
     @Id
     @SequenceGenerator(name = "student_sequence",
@@ -12,20 +16,45 @@ public class Student {
             allocationSize = 1)
     @GeneratedValue(
             strategy = SEQUENCE,
-            generator ="student_sequence"
+            generator = "student_sequence"
+    )
+    @Column(
+            name = "id",
+            nullable = false
     )
     private Long id;
+    @Column(
+            name = "first_name",
+            columnDefinition = "TEXT",
+            nullable = false
+    )
     private String firstName;
+    @Column(
+            name = "last_name",
+            columnDefinition = "TEXT",
+            nullable = false
+    )
     private String lastName;
+    @Column(
+            name = "email",
+            columnDefinition = "TEXT",
+            nullable = false,
+            unique = true
+    )
     private String email;
+    @Column(
+            name = "age"
+    )
     private Integer age;
 
-    public Student(Long id, String firstName, String lastName, String email, Integer age) {
-        this.id = id;
+    public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.age = age;
+    }
+
+    public Student() {
     }
 
     public Long getId() {
