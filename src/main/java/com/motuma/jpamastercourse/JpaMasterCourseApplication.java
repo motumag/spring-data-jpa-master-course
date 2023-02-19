@@ -17,14 +17,18 @@ public class JpaMasterCourseApplication {
  CommandLineRunner commandLineRunner(StudentRepository studentRepository){
         return args -> {
             try {
-                Student student = new Student("Motuma", "Gishu", "mow2tuma12@gmail", 27);
+                Student motuma = new Student("Motuma", "Gishu", "mow2tuma12@gmail", 27);
 //            studentRepository.save(student);
-                Student bethy = new Student("Bethy", "Teferi", "be12twhy@gmail", 27);
-                studentRepository.saveAll(List.of(student, bethy));
+                Student bethy = new Student("Bethy", "Teferi", "be12twhy@gmail", 23);
+                Student momo = new Student("Momo", "Nana", "momo@gmail", 22);
+                studentRepository.saveAll(List.of(motuma, bethy,momo));
                 //Custom query in which we can search a student using email
              studentRepository.findStudentByEmail("be12twhy@gmail")
                      .ifPresentOrElse(System.out::println,
                              () -> System.out.println("The student with be12twhy@gmail email is not found"));
+             //How to use list and find from db using custom jpa query
+                studentRepository.findStudentByFirstNameEqualsAndAgeEquals(
+                        "Motuma", 27).forEach(System.out::println);
 
 
             } catch (Exception e) {
